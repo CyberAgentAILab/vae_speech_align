@@ -1,0 +1,46 @@
+# Lint/format gates that run on every push and pull request.
+name: lint
+
+on:
+  push:
+    branches: [cleanup/code-release, main, develop]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d  # v10.0.1
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --extra dev
+
+      - name: black
+        run: uv run black --check vae_speech_align/ test/ example/
+
+      - name: isort
+        run: uv run isort --check-only vae_speech_align/ test/ example/
+
+      - name: flake8
+        run: uv run pflake8 vae_speech_align/ test/ example/
+
+      - name: mypy
+        run: uv run mypy vae_speech_align/
+
+      - name: nbQA (notebooks)
+        run: |
+          notebooks=$(git ls-files '*.ipynb')
+          if [ -n "$notebooks" ]; then
+            uv run nbqa black --check $notebooks
+            uv run nbqa isort --check-only $notebooks
+            uv run nbqa flake8 $notebooks
+          else
+            echo "No notebooks found; skipping nbQA."
+          fi

@@ -1,0 +1,6 @@
+data/downloads/
+data/phoneme_txt/
+data/wav/
+output/
+log/
+nohup.out

@@ -1,0 +1,73 @@
+features:
+  acoustic_feature_extractor:
+    model_type: WAV2VEC2
+    model_name: "facebook/wav2vec2-large-xlsr-53"
+    layer_idx: 0
+    num_dims: 1024
+  linguistic:
+    tag: phoneme
+    num_tokens: 41
+    token_list_file: "./data/all_phonemes.txt"
+
+model:
+  acoustic_encoder:
+    residual: true
+    num_layers: 6
+    conv_kernel_size: 3
+    hidden_dim: 256
+    dropout_rate: 0.1
+  linguistic_encoder:
+    residual: true
+    num_layers: 6
+    conv_kernel_size: 3
+    hidden_dim: 256
+    dropout_rate: 0.1
+  acoustic_decoder:
+    residual: true
+    num_layers: 6
+    conv_kernel_size: 3
+    hidden_dim: 256
+    dropout_rate: 0.1
+  linguistic_decoder:
+    residual: true
+    num_layers: 6
+    conv_kernel_size: 3
+    hidden_dim: 256
+    dropout_rate: 0.1
+  acoustic_upsample_scale: 2
+  linguistic_upsample_scale: 3
+  loss:
+    alignment: 1.0
+    recon_x: 0.1
+    recon_y: 0.1
+    vae_beta_x: 0.1
+    vae_beta_y: 0.1
+  matching_dim: 64
+  position_bias:
+    bias_type: LOGPROB
+    initial_scale: 0.01
+    update_rate: 1.0
+  annealing_weight:
+    initial_sigma: 20.0
+    update_rate: 0.9
+    kernel_size: 41
+
+training:
+  batch_size: 4
+  num_workers: 0
+  num_steps: 90000
+  optimizer:
+    learning_rate: 1e-5
+    weight_decay: 1e-6
+  scheduler:
+    warmup_steps: 500
+  intervals:
+    training_loss_interval: 100
+    plot_interval: 1000
+    checkpoint_interval: 10000
+    annealing_interval: 1000
+    position_bias_scale_interval: 10000
+
+initial_checkpoint: ""
+
+rand_seed: 0

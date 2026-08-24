@@ -1,0 +1,4 @@
+data/phoneme_txt/
+output/
+# downloaded from GitHub Releases (tracked via LFS in the private repo)
+model.safetensors

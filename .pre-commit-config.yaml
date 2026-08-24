@@ -1,0 +1,49 @@
+# Linters/formatters that run on every commit (issue #5).
+# All hooks run through `uv run` so they use the exact tool versions
+# pinned in pyproject.toml / uv.lock. Install with:
+#   uv run pre-commit install
+repos:
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: uv run black
+        language: system
+        types: [python]
+
+      - id: isort
+        name: isort
+        entry: uv run isort
+        language: system
+        types: [python]
+
+      - id: flake8
+        name: flake8 (pflake8)
+        entry: uv run pflake8
+        language: system
+        types: [python]
+
+      - id: mypy
+        name: mypy
+        entry: uv run mypy vae_speech_align/
+        language: system
+        pass_filenames: false
+        types: [python]
+
+      - id: nbqa-black
+        name: nbqa-black
+        entry: uv run nbqa black
+        language: system
+        types: [jupyter]
+
+      - id: nbqa-isort
+        name: nbqa-isort
+        entry: uv run nbqa isort
+        language: system
+        types: [jupyter]
+
+      - id: nbqa-flake8
+        name: nbqa-flake8
+        entry: uv run nbqa flake8
+        language: system
+        types: [jupyter]
